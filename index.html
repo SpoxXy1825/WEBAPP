@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <title>لوحة البوت — خدمات المجتمع</title>
+  <style>
+  :root{
+    --bg:#0b1220;
+    --panel:#121b2f;
+    --panel2:#0f172a;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --brand:#22c55e;
+    --warn:#f59e0b;
+    --danger:#ef4444;
+    --line:rgba(255,255,255,.08);
+    --shadow:0 18px 60px rgba(0,0,0,.35);
+    --radius:18px;
+    --radius2:24px;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans Arabic", "Noto Sans", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--font);
+    background: radial-gradient(1200px 500px at 80% -10%, rgba(34,197,94,.18), transparent 70%),
+                radial-gradient(900px 400px at 10% 0%, rgba(59,130,246,.18), transparent 60%),
+                linear-gradient(180deg, #050814, var(--bg));
+    color:var(--text);
+  }
+  a{color:inherit}
+  .container{
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    padding:14px 14px 24px;
+  }
+  .header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(11,18,32,.72);
+    border:1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    border-radius: var(--radius2);
+    padding:14px 14px 12px;
+  }
+  /* Keep the header professional (no huge floating panel while scrolling)
+     by auto-collapsing it after a small scroll. */
+  .header.compact{padding:10px 12px 10px}
+  .header.compact .titleBlock p{display:none}
+  .header.compact .pills{display:none}
+  .header.compact .tabs{padding:8px 0 0}
+  .brandRow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .brandTitle{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo{
+    width:44px;height:44px;border-radius:14px;
+    background: linear-gradient(135deg, rgba(34,197,94,.9), rgba(59,130,246,.7));
+    box-shadow: 0 12px 35px rgba(34,197,94,.2);
+    display:grid;place-items:center;
+    font-weight:800;
+  }
+  .titleBlock h1{
+    margin:0;
+    font-size:16px;
+    letter-spacing:.2px;
+  }
+  .titleBlock p{
+    margin:2px 0 0;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .pills{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .pill{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    border:1px solid var(--line);
+    background: rgba(18,27,47,.65);
+    border-radius: 999px;
+    padding:8px 10px;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .pill b{color:var(--text); font-weight:700}
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:14px;
+  }
+  @media (min-width: 720px){
+    .grid{grid-template-columns: 1fr 1fr}
+  }
+  .card{
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(18,27,47,.92), rgba(15,23,42,.85));
+    border-radius: var(--radius2);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .cardHeader{
+    padding:14px 14px 0;
+  }
+  .cardHeader h2{
+    margin:0;
+    font-size:14px;
+  }
+  .cardHeader p{
+    margin:6px 0 0;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .cardBody{padding:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .input, .select, .textarea{
+    width:100%;
+    border:1px solid var(--line);
+    background: rgba(11,18,32,.65);
+    color:var(--text);
+    border-radius: 14px;
+    padding:12px 12px;
+    outline:none;
+    font-size:13px;
+  }
+  .textarea{min-height:92px; resize:vertical}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:240px;flex:1}
+  .label{
+    font-size:12px;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .hint{
+    font-size:11px;
+    color:rgba(148,163,184,.95);
+    line-height:1.5;
+  }
+  .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .btn{
+    border:1px solid var(--line);
+    background: rgba(18,27,47,.72);
+    color:var(--text);
+    padding:11px 14px;
+    border-radius: 14px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:13px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition: transform .08s ease, background .18s ease, border-color .18s ease;
+  }
+  .btn:hover{transform: translateY(-1px); background: rgba(18,27,47,.92)}
+  .btn:active{transform: translateY(0px)}
+  .btnPrimary{
+    background: rgba(34,197,94,.18);
+    border-color: rgba(34,197,94,.35);
+  }
+  .btnWarn{
+    background: rgba(245,158,11,.16);
+    border-color: rgba(245,158,11,.32);
+  }
+  .btnDanger{
+    background: rgba(239,68,68,.14);
+    border-color: rgba(239,68,68,.30);
+  }
+  /* Switch (Admin toggles) */
+  .toggle{
+    appearance:none;
+    width:46px;
+    height:26px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.10);
+    position:relative;
+    cursor:pointer;
+    outline:none;
+    transition: background .18s ease, border-color .18s ease;
+  }
+  .toggle::after{
+    content:"";
+    position:absolute;
+    top:3px;
+    left:3px;
+    width:18px;
+    height:18px;
+    border-radius:999px;
+    background: rgba(255,255,255,.75);
+    box-shadow: 0 6px 18px rgba(0,0,0,.35);
+    transition: transform .18s ease, background .18s ease;
+  }
+  .toggle:checked{
+    background: rgba(34,197,94,.22);
+    border-color: rgba(34,197,94,.40);
+  }
+  .toggle:checked::after{transform: translateX(20px); background: rgba(255,255,255,.90)}
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--line);
+    background: rgba(11,18,32,.55);
+    border-radius:999px;
+    padding:8px 10px;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .progressWrap{display:flex;flex-direction:column;gap:8px}
+  .progressBar{
+    height:12px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .progressFill{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, rgba(34,197,94,.90), rgba(59,130,246,.80));
+    transition: width .35s ease;
+  }
+  .kpi{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    padding:12px;
+    border:1px dashed rgba(255,255,255,.10);
+    border-radius: 16px;
+    background: rgba(11,18,32,.40);
+    min-width: 140px;
+    flex:1;
+  }
+  .kpi .v{font-size:18px;font-weight:900;color:var(--text)}
+  .kpi .t{font-size:12px;color:var(--muted)}
+  .hr{
+    height:1px;
+    background: var(--line);
+    margin:12px 0;
+  }
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:10px 0 0;
+  }
+  .tabs::-webkit-scrollbar{height:0}
+  .tab{
+    border:1px solid var(--line);
+    background: rgba(18,27,47,.55);
+    color:var(--muted);
+    padding:9px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:800;
+    font-size:12px;
+  }
+  .tab.active{
+    color:var(--text);
+    background: rgba(34,197,94,.16);
+    border-color: rgba(34,197,94,.35);
+  }
+  .section{display:none}
+  .section.active{display:block}
+  .toast{
+    position:fixed;
+    inset:auto 12px 12px 12px;
+    z-index: 999;
+    display:none;
+  }
+  .toast.show{display:block}
+  .toast .inner{
+    border:1px solid var(--line);
+    background: rgba(18,27,47,.92);
+    border-radius: 16px;
+    padding:12px 12px;
+    box-shadow: var(--shadow);
+    font-size:13px;
+    line-height:1.5;
+  }
+  .small{
+    font-size:11px;
+    color:var(--muted);
+  }
+  .list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .item{
+    border:1px solid var(--line);
+    background: rgba(11,18,32,.55);
+    border-radius: 16px;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .item .meta{display:flex;flex-direction:column;gap:4px}
+  .item .meta .h{font-size:13px;font-weight:900}
+  .item .meta .p{font-size:12px;color:var(--muted);line-height:1.5}
+  .chip{
+    font-size:11px;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    color:var(--muted);
+    background: rgba(18,27,47,.35);
+  }
+  .footer{
+    margin-top:auto;
+    padding:10px 6px 0;
+    text-align:center;
+    color:rgba(148,163,184,.85);
+    font-size:11px;
+  }
+  kbd{
+    display:inline-block;
+    border:1px solid var(--line);
+    background: rgba(11,18,32,.55);
+    border-radius: 10px;
+    padding:4px 8px;
+    font-size:11px;
+    color:var(--text);
+    font-weight:800;
+  }
+      
+  </style>
+  <script>
+    // Telegram injects window.Telegram when opened as a Web App.
+    // The UI works in a normal browser too (limited).
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brandRow">
+        <div class="brandTitle">
+          <div class="logo">VT</div>
+          <div class="titleBlock">
+            <h1>لوحة البوت الاحترافية</h1>
+            <p>إدارة ملفك + حفظ الروابط + إرسال تذكرة بسهولة</p>
+          </div>
+        </div>
+        <div class="pills">
+          <div class="pill">👤 <span id="tgName">ضيف</span></div>
+          <div class="pill">🆔 <b id="tgId">—</b></div>
+          <div class="pill">🔐 <span id="mode">WebApp</span></div>
+          <div class="pill">⭐ <b id="ratingSummary">—</b> <span id="ratingCount" class="small"></span></div>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="tabs">
+        <button class="tab active" data-tab="profile">👤 الملف</button>
+        <button class="tab" data-tab="ticket">🎫 تذكرة</button>
+        <button class="tab" data-tab="saved">📌 الروابط</button>
+        <button class="tab" data-tab="howto">📚 شرح سريع</button>
+        <button class="tab" data-tab="support">🌟 الدعم</button>
+        <button class="tab" id="adminTabBtn" data-tab="admin" style="display:none">🛠 الإدارة</button>
+      </div>
+    </header>
+    <main class="grid">
+      <section class="card section active" id="section-profile">
+        <div class="cardHeader">
+          <h2>👤 إعداد الملف الشخصي</h2>
+          <p>املأ بياناتك مرة واحدة. البوت يمنع استخدام الخدمات حتى يكتمل الملف.</p>
+        </div>
+        <div class="cardBody">
+          <div class="row">
+            <div class="field">
+              <div class="label">الاسم الكامل</div>
+              <input class="input" id="fullName" placeholder="مثال: محمد علي">
+              <div class="hint">سيظهر للإدارة داخل التذكرة.</div>
+            </div>
+            <div class="field">
+              <div class="label">العمر</div>
+              <input class="input" id="age" type="number" min="1" max="120" placeholder="مثال: 19">
+              <div class="hint">اكتب عمر صحيح (1-120).</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <div class="label">حساب تيك توك</div>
+              <input class="input" id="tiktok" placeholder="@username أو رابط الحساب">
+              <div class="hint">يمكن إرسال @ أو رابط مباشر.</div>
+            </div>
+          </div>
+          <div class="btnRow">
+            <button class="btn btnPrimary" id="saveProfileBtn">💾 حفظ الملف</button>
+            <button class="btn" id="openChatProfileBtn">🧩 فتح الملف داخل البوت</button>
+          </div>
+          <div class="hr"></div>
+          <div class="row">
+            <div class="kpi"><div class="v" id="profileStatus">—</div><div class="t">حالة الملف</div></div>
+            <div class="kpi"><div class="v" id="tipSaved">💡</div><div class="t">نصيحة</div></div>
+          </div>
+          <p class="small">💡 الأفضل: احفظ روابط الفيديو في قسم <b>📌 الروابط</b> ثم اخترها بضغطة زر عند إرسال التذكرة.</p>
+        </div>
+      </section>
+      <section class="card section" id="section-ticket">
+        <div class="cardHeader">
+          <h2>🎫 إرسال تذكرة بسرعة</h2>
+          <p>اختر الخدمة ثم أرسل الرابط. داخل البوت يمكنك أيضًا اختيار رابط محفوظ.</p>
+        </div>
+        <div class="cardBody">
+          <!-- Form -->
+          <div id="ticketForm">
+            <div class="row">
+              <div class="field">
+                <div class="label">الخدمة</div>
+                <select class="select" id="serviceSelect"></select>
+                <div class="hint">الخدمات المعطّلة من الإدارة سيتم رفضها تلقائيًا.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <div class="label">رابط الفيديو</div>
+                <input class="input" id="videoUrl" placeholder="https://www.tiktok.com/...">
+                <div class="hint">اكتب رابط الفيديو مباشرة أو اختر رابط محفوظ من تبويب 📌 الروابط.</div>
+              </div>
+            </div>
+            <div class="btnRow">
+              <button class="btn btnPrimary" id="sendTicketBtn">🚀 إرسال التذكرة</button>
+              <button class="btn btnWarn" id="useSavedTipBtn">📌 كيف أستخدم الروابط المحفوظة؟</button>
+            </div>
+            <div class="hr"></div>
+            <div class="badge">⏱ ملاحظة: وقت الانتظار بين التذاكر تحدده الإدارة من مركز الإدارة.</div>
+          </div>
+
+          <!-- Waiting / status -->
+          <div id="ticketWait" style="display:none">
+            <div class="badge" id="waitBadge">⏳ في انتظار موافقة الإدارة...</div>
+            <div class="row">
+              <div class="kpi"><div class="v" id="waitTimer">00:00</div><div class="t">وقت الانتظار</div></div>
+              <div class="kpi"><div class="v" id="waitStatus">PENDING</div><div class="t">حالة التذكرة</div></div>
+              <div class="kpi"><div class="v" id="waitOrderId">—</div><div class="t">رقم التذكرة</div></div>
+            </div>
+            <div class="hr"></div>
+            <div class="progressWrap">
+              <div class="progressBar"><div class="progressFill" id="waitProgress"></div></div>
+              <div class="small" id="waitHint">🔄 نحدّث الحالة تلقائياً (تحتاج تشغيل Web API).</div>
+            </div>
+            <div class="btnRow">
+              <button class="btn" id="openBotChatBtn">💬 افتح البوت</button>
+              <button class="btn btnPrimary" id="newTicketBtn">➕ تذكرة جديدة</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="card section" id="section-saved">
+        <div class="cardHeader">
+          <h2>📌 حفظ الروابط</h2>
+          <p>احفظ روابط الفيديوهات هنا لتستخدمها بسرعة. سيتم إرسال الرابط للبوت عند الضغط على حفظ.</p>
+        </div>
+        <div class="cardBody">
+          <div class="row">
+            <div class="field">
+              <div class="label">أضف رابط فيديو</div>
+              <input class="input" id="saveUrl" placeholder="الصق رابط فيديو تيك توك">
+              <div class="hint">سيُحفظ الرابط داخل قاعدة بيانات البوت (من خلال رسالة web_app_data).</div>
+            </div>
+          </div>
+          <div class="btnRow">
+            <button class="btn btnPrimary" id="saveVideoBtn">➕ حفظ الرابط</button>
+            <button class="btn" id="openSavedInChatBtn">🗂 إدارة الروابط داخل البوت</button>
+          </div>
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px">📌 روابط محفوظة داخل البوت</h3>
+          <div class="list" id="dbSavedList"></div>
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px">💾 روابط محلية (اختياري)</h3>
+          <div class="list" id="localSavedList"></div>
+          <p class="small">⚠️ القائمة المحلية لتسهيل الاختيار فقط. المصدر الحقيقي للروابط هو قائمة 📌 الفيديوهات المحفوظة داخل البوت (قاعدة البيانات).</p>
+        </div>
+      </section>
+      <section class="card section" id="section-howto">
+        <div class="cardHeader">
+          <h2>📚 كيف تستخدم البوت؟ (مختصر احترافي)</h2>
+          <p>هذا شرح داخل الواجهة. يمكنك أيضًا مشاهدة الشرح داخل البوت عند /start لأول مرة.</p>
+        </div>
+        <div class="cardBody">
+          <div class="row">
+            <div class="kpi"><div class="v">1</div><div class="t">أكمل الملف</div></div>
+            <div class="kpi"><div class="v">2</div><div class="t">احفظ الروابط</div></div>
+            <div class="kpi"><div class="v">3</div><div class="t">اختر الخدمة</div></div>
+            <div class="kpi"><div class="v">4</div><div class="t">أرسل التذكرة</div></div>
+          </div>
+          <div class="hr"></div>
+          <div class="list">
+            <div class="item"><div class="meta"><div class="h">👤 الملف الشخصي</div><div class="p">أدخل الاسم + العمر + حساب تيك توك. بدونها لن تعمل الخدمات.</div></div><span class="chip">إجباري</span></div>
+            <div class="item"><div class="meta"><div class="h">📌 الروابط المحفوظة</div><div class="p">احفظ روابط فيديوهاتك لتستخدمها بسرعة بدل نسخ الرابط كل مرة.</div></div><span class="chip">مقترح</span></div>
+            <div class="item"><div class="meta"><div class="h">🚀 الخدمات</div><div class="p">اختر نوع الخدمة (مشاهدات/لايك/مشاركة/حفظ...) ثم أرسل الرابط أو اختر رابط محفوظ داخل البوت.</div></div><span class="chip">سهل</span></div>
+            <div class="item"><div class="meta"><div class="h">⭐ التقييم</div><div class="p">بعد اكتمال التذكرة سيطلب منك البوت تقييم 1-5 نجوم لتحسين الجودة.</div></div><span class="chip">مهم</span></div>
+          </div>
+          <div class="btnRow">
+            <button class="btn" id="openHelpInChatBtn">📚 افتح المساعدة داخل البوت</button>
+          </div>
+        </div>
+      </section>
+      <section class="card section" id="section-support">
+        <div class="cardHeader">
+          <h2>🌟 التواصل مع الدعم</h2>
+          <p>إذا واجهت مشكلة، تواصل عبر زر الدعم داخل البوت. يمكنك أيضًا إرسال رسالة مع لقطة شاشة.</p>
+        </div>
+        <div class="cardBody">
+          <div class="list">
+            <div class="item"><div class="meta"><div class="h">💬 افتح الدعم في البوت</div><div class="p">اضغط زر 🌟 التواصل مع الدعم داخل البوت ثم اكتب مشكلتك.</div></div><button class="btn btnPrimary" id="openSupportBtn">فتح</button></div>
+            <div class="item"><div class="meta"><div class="h">🧾 نصيحة</div><div class="p">قبل إرسال تذكرة جديدة: تأكد من الرابط صحيح وأن الخدمة مفعلة.</div></div><span class="chip">نصيحة</span></div>
+          </div>
+          <div class="hr"></div>
+          <div class="badge">🔒 ملاحظة: لو أعطيت تقييم ⭐1–⭐2 قد يسألك البوت: "وش المشكلة؟" وترسل للإدارة لتحسين الخدمة.</div>
+        </div>
+      </section>
+
+      <!-- Admin dashboard (shown only for ADMIN_USER_ID) -->
+      <section class="card section" id="section-admin">
+        <div class="cardHeader">
+          <h2>🛠 لوحة الإدارة</h2>
+          <p>إدارة التذاكر مباشرة من الواجهة (قائمة الانتظار + قبول/رفض + تحليلات + تفعيل/تعطيل الخدمات).</p>
+        </div>
+        <div class="cardBody">
+          <div class="row">
+            <div class="kpi"><div class="v" id="adminPendingCount">—</div><div class="t">تذاكر قيد الانتظار</div></div>
+            <div class="kpi"><div class="v" id="adminTotalTickets">—</div><div class="t">إجمالي التذاكر</div></div>
+            <div class="kpi"><div class="v" id="adminUsers">—</div><div class="t">المستخدمين</div></div>
+          </div>
+          <div class="btnRow">
+            <button class="btn btnPrimary" id="adminRefreshBtn">🔄 تحديث</button>
+            <button class="btn" id="adminOpenBotBtn">💬 افتح مركز الإدارة داخل البوت</button>
+          </div>
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px">🎫 تذاكر قيد الانتظار</h3>
+          <div class="list" id="adminPendingList"></div>
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px">🧩 الخدمات (تفعيل/تعطيل)</h3>
+          <div class="list" id="adminServicesList"></div>
+          <div class="hr"></div>
+          <h3 style="margin:0 0 8px">🗑 حذف تذاكر من مستخدم</h3>
+          <div class="row">
+            <div class="field">
+              <div class="label">User ID</div>
+              <input class="input" id="adminRemoveUserId" placeholder="مثال: 123456789">
+              <div class="hint">يقلل عدد التذاكر في 🏆 المتصدرين ويحذف آخر تذاكر.</div>
+            </div>
+            <div class="field">
+              <div class="label">العدد</div>
+              <input class="input" id="adminRemoveCount" placeholder="مثال: 5">
+              <div class="hint">لن يحذف أكثر من الموجود.</div>
+            </div>
+          </div>
+          <div class="btnRow">
+            <button class="btn btnDanger" id="adminRemoveBtn">🗑 تنفيذ</button>
+          </div>
+          <p class="small" id="adminMsg" style="margin-top:10px"></p>
+        </div>
+      </section>
+    </main>
+    <div class="footer">
+      صنع بحب ❤️ — واجهة WebApp تعمل مع Telegram. تحتاج استضافة HTTPS لفتحها داخل التطبيق.
+    </div>
+  </div>
+  <div class="toast" id="toast"><div class="inner" id="toastInner">…</div></div>
+  <script>
+    // Fallback services (will be replaced by /api/me when Web API is enabled)
+    let SERVICES = [{"id": "likes", "name": "الإعجابات", "emoji": "👍"}, {"id": "shares", "name": "المشاركات", "emoji": "🔄"}, {"id": "views", "name": "المشاهدات", "emoji": "👁️"}, {"id": "saves", "name": "الحفظ", "emoji": "🔖"}];
+    const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+    const API_BASE = (new URLSearchParams(location.search).get("api") || "").replace(/\/$/, "");
+    const qs = (s) => document.querySelector(s);
+    const qsa = (s) => Array.from(document.querySelectorAll(s));
+
+    async function apiFetch(path, opts={}){
+      const url = (API_BASE ? API_BASE : "") + path;
+      const headers = Object.assign({"Content-Type": "application/json"}, opts.headers||{});
+      if(tg && tg.initData){ headers["X-Tg-Init-Data"] = tg.initData; }
+      try{
+        const r = await fetch(url, Object.assign({}, opts, {headers}));
+        let data = null;
+        try{ data = await r.json(); }catch(_){ data = {ok:false, error:"bad_json"}; }
+        if(!r.ok && data && typeof data.ok === "undefined") data.ok = false;
+        return data;
+      }catch(e){
+        return {ok:false, error:"network", detail:String(e)};
+      }
+    }
+    function toast(msg){
+      const t = qs("#toast"); const i = qs("#toastInner");
+      i.textContent = msg; t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"), 3200);
+    }
+    function send(type, payload={}){
+      const data = JSON.stringify({type, ...payload});
+      if(tg){ tg.sendData(data); }
+      else { console.log("sendData:", data); }
+    }
+    function initTelegram(){
+      if(!tg){ qs("#mode").textContent = "Browser"; return; }
+      tg.ready(); tg.expand();
+      const u = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+      if(u){
+        qs("#tgName").textContent = u.first_name + (u.last_name ? (" " + u.last_name) : "");
+        qs("#tgId").textContent = String(u.id);
+      }
+    }
+    function renderServices(){
+      const sel = qs("#serviceSelect");
+      sel.innerHTML = "";
+      SERVICES.forEach(s=>{
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        const disabled = (s.enabled === false);
+        opt.disabled = disabled;
+        opt.textContent = (s.emoji ? (s.emoji+" ") : "") + (s.name || s.id) + (disabled ? " (موقوف)" : "");
+        sel.appendChild(opt);
+      });
+    }
+    function setupTabs(){
+      qsa(".tab").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          qsa(".tab").forEach(x=>x.classList.remove("active"));
+          btn.classList.add("active");
+          const tab = btn.dataset.tab;
+          qsa(".section").forEach(sec=>sec.classList.remove("active"));
+          qs("#section-"+tab).classList.add("active");
+          if(tab === "admin"){ loadAdmin(); }
+        });
+      });
+    }
+
+    function gotoTab(tab){
+      const btn = qs(`.tab[data-tab="${tab}"]`);
+      if(btn){ btn.click(); }
+    }
+
+    // --- DB-backed content (via Web API)
+    let ME = null;
+    let DB_SAVED = [];
+
+    function renderDbSaved(){
+      const wrap = qs("#dbSavedList");
+      if(!wrap) return;
+      wrap.innerHTML = "";
+      if(!DB_SAVED || DB_SAVED.length===0){
+        wrap.innerHTML = `<div class="item"><div class="meta"><div class="h">لا توجد روابط محفوظة داخل البوت</div><div class="p">اضف رابط من الأعلى ثم احفظه.</div></div><span class="chip">—</span></div>`;
+        return;
+      }
+      DB_SAVED.forEach((v, idx)=>{
+        const url = (typeof v === "string") ? v : (v.url || "");
+        const title = (typeof v === "string") ? `رابط #${idx+1}` : (v.label || `رابط #${idx+1}`);
+        const div = document.createElement("div");
+        div.className="item";
+        div.innerHTML = `<div class="meta"><div class="h">${title}</div><div class="p" style="direction:ltr;text-align:left;max-width:68ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${url}</div></div>`;
+        const right = document.createElement("div");
+        right.className="row";
+        const use = document.createElement("button");
+        use.className="btn btnPrimary"; use.textContent="استخدام";
+        use.addEventListener("click", ()=>{
+          qs("#videoUrl").value=url;
+          toast("تم اختيار الرابط ✅");
+          gotoTab("ticket");
+        });
+        right.appendChild(use);
+        div.appendChild(right);
+        wrap.appendChild(div);
+      });
+    }
+
+    // --- Ticket waiting UI + live status
+    let waitTimerHandle = null;
+    let waitPollHandle = null;
+    let waitStartedAt = 0;
+    let waitClientToken = null;
+
+    function _fmtTime(ms){
+      const s = Math.max(0, Math.floor(ms/1000));
+      const mm = String(Math.floor(s/60)).padStart(2,"0");
+      const ss = String(s%60).padStart(2,"0");
+      return `${mm}:${ss}`;
+    }
+    function showTicketWait(on){
+      qs("#ticketForm").style.display = on ? "none" : "block";
+      qs("#ticketWait").style.display = on ? "block" : "none";
+    }
+    function stopWait(){
+      if(waitTimerHandle){ clearInterval(waitTimerHandle); waitTimerHandle=null; }
+      if(waitPollHandle){ clearInterval(waitPollHandle); waitPollHandle=null; }
+    }
+    async function pollStatusOnce(){
+      if(!waitClientToken) return;
+      // If API is not available, keep UI in "pending" mode.
+      if(!tg || !tg.initData){
+        qs("#waitHint").textContent = "🔌 لتفعيل تحديث الحالة داخل الصفحة، افتح الواجهة من داخل Telegram.";
+        return;
+      }
+      const res = await apiFetch(`/api/order/status?client_token=${encodeURIComponent(waitClientToken)}`);
+      if(!res || !res.ok || !res.found){
+        qs("#waitHint").textContent = "🔄 نبحث عن التذكرة في قاعدة البيانات...";
+        return;
+      }
+      const o = res.order || {};
+      const st = (o.status || "pending").toLowerCase();
+      qs("#waitOrderId").textContent = o.order_id || "—";
+      qs("#waitStatus").textContent = st.toUpperCase();
+      if(st === "pending"){
+        qs("#waitBadge").textContent = "⏳ في انتظار موافقة الإدارة...";
+        qs("#waitHint").textContent = "💡 بمجرد قبول/رفض التذكرة سيصلك إشعار في البوت وتحديث هنا.";
+        return;
+      }
+      // Completed / rejected
+      const fill = qs("#waitProgress");
+      fill.style.width = "100%";
+      if(st === "completed"){
+        qs("#waitBadge").textContent = "✅ تم اعتماد التذكرة!";
+        qs("#waitHint").textContent = "📩 تم إرسال إشعار في البوت. قد يُطلب منك تقييم ⭐.";
+        toast("تم اعتماد التذكرة ✅");
+      } else if(st === "rejected"){
+        qs("#waitBadge").textContent = "❌ تم رفض التذكرة";
+        qs("#waitHint").textContent = "📩 تم إرسال سبب/إشعار في البوت.";
+        toast("تم رفض التذكرة ❌");
+      } else {
+        qs("#waitBadge").textContent = `ℹ️ الحالة: ${st}`;
+      }
+      stopWait();
+    }
+    function startWait(clientToken){
+      stopWait();
+      waitClientToken = clientToken;
+      waitStartedAt = Date.now();
+      showTicketWait(true);
+      qs("#waitStatus").textContent = "PENDING";
+      qs("#waitOrderId").textContent = "—";
+      qs("#waitProgress").style.width = "8%";
+      qs("#waitHint").textContent = "🔄 نحدّث الحالة تلقائياً...";
+      waitTimerHandle = setInterval(()=>{
+        qs("#waitTimer").textContent = _fmtTime(Date.now() - waitStartedAt);
+        // a gentle "breathing" progress while pending
+        const t = (Date.now() - waitStartedAt)/1000;
+        const pct = Math.min(95, 8 + (t*2));
+        qs("#waitProgress").style.width = pct.toFixed(0) + "%";
+      }, 1000);
+      // Poll every 3 seconds
+      waitPollHandle = setInterval(pollStatusOnce, 3000);
+      pollStatusOnce();
+    }
+    function localSaved(){
+      try{ return JSON.parse(localStorage.getItem("localSaved")||"[]"); }catch(e){ return []; }
+    }
+    function setLocalSaved(arr){ localStorage.setItem("localSaved", JSON.stringify(arr.slice(0,25))); }
+    function renderLocalSaved(){
+      const wrap = qs("#localSavedList");
+      const arr = localSaved();
+      wrap.innerHTML = "";
+      if(arr.length===0){
+        wrap.innerHTML = `<div class="item"><div class="meta"><div class="h">لا توجد روابط محلية بعد</div><div class="p">أضف رابط من الأعلى ثم احفظه.</div></div><span class="chip">—</span></div>`;
+        return;
+      }
+      arr.forEach((url, idx)=>{
+        const div = document.createElement("div");
+        div.className="item";
+        div.innerHTML = `<div class="meta"><div class="h">رابط محفوظ #${idx+1}</div><div class="p" style="direction:ltr;text-align:left;max-width:68ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${url}</div></div>`;
+        const right = document.createElement("div");
+        right.className="row";
+        const use = document.createElement("button");
+        use.className="btn btnPrimary"; use.textContent="استخدام";
+        use.addEventListener("click", ()=>{ qs("#videoUrl").value=url; toast("تم اختيار الرابط ✅"); gotoTab("ticket"); });
+        const del = document.createElement("button");
+        del.className="btn btnDanger"; del.textContent="حذف";
+        del.addEventListener("click", ()=>{
+          const a = localSaved().filter((_,i)=>i!==idx); setLocalSaved(a); renderLocalSaved();
+          toast("تم حذف الرابط");
+        });
+        right.appendChild(use); right.appendChild(del);
+        div.appendChild(right);
+        wrap.appendChild(div);
+      })
+    }
+    function bindActions(){
+      qs("#saveProfileBtn").addEventListener("click", ()=>{
+        const full_name = qs("#fullName").value.trim();
+        const age = parseInt(qs("#age").value.trim(), 10);
+        const tiktok_account = qs("#tiktok").value.trim();
+        if(!full_name || !tiktok_account || !(age>0)){
+          toast("رجاءً املأ الاسم + العمر + حساب تيك توك");
+          return;
+        }
+        send("update_profile", {full_name, age, tiktok_account});
+        qs("#profileStatus").textContent = "✅ تم الإرسال";
+        toast("تم إرسال بيانات الملف للبوت ✅");
+        if(tg){ tg.HapticFeedback && tg.HapticFeedback.notificationOccurred("success"); }
+      });
+      qs("#sendTicketBtn").addEventListener("click", ()=>{
+        const action = qs("#serviceSelect").value;
+        const video_url = qs("#videoUrl").value.trim();
+        if(!action){ toast("اختر الخدمة"); return; }
+        if(!video_url){ toast("ضع رابط الفيديو"); return; }
+        const client_token = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : (Date.now()+"-"+Math.random().toString(16).slice(2));
+        send("create_ticket", {action, video_url, client_token});
+        toast("تم إرسال التذكرة ✅ انتظر تأكيد الإدارة");
+        startWait(client_token);
+        if(tg){ tg.HapticFeedback && tg.HapticFeedback.notificationOccurred("success"); }
+      });
+      qs("#saveVideoBtn").addEventListener("click", ()=>{
+        const url = qs("#saveUrl").value.trim();
+        if(!url){ toast("ضع الرابط أولاً"); return; }
+        // store locally for quick pick + send to bot for DB save
+        const arr = localSaved();
+        arr.unshift(url);
+        setLocalSaved(arr); renderLocalSaved();
+        send("save_video", {url});
+        // optimistic update for DB list (real DB list refresh comes from /api/me)
+        DB_SAVED = [{url, label: "(جديد)"}, ...(DB_SAVED || [])].slice(0,25);
+        renderDbSaved();
+        qs("#saveUrl").value="";
+        toast("تم حفظ الرابط ✅");
+      });
+      qs("#useSavedTipBtn").addEventListener("click", ()=>{
+        toast("احفظ الروابط من تبويب 📌 الروابط ثم اضغط استخدام، أو داخل البوت اختر: استخدام فيديو محفوظ");
+      });
+      qs("#openChatProfileBtn").addEventListener("click", ()=>send("open_chat", {target:"profile"}));
+      qs("#openSavedInChatBtn").addEventListener("click", ()=>send("open_chat", {target:"saved_videos"}));
+      qs("#openHelpInChatBtn").addEventListener("click", ()=>send("open_chat", {target:"help"}));
+      qs("#openSupportBtn").addEventListener("click", ()=>send("open_chat", {target:"support"}));
+
+      // Waiting UI buttons
+      qs("#openBotChatBtn").addEventListener("click", ()=>send("open_chat", {target:"main"}));
+      qs("#newTicketBtn").addEventListener("click", ()=>{
+        stopWait();
+        showTicketWait(false);
+        qs("#waitTimer").textContent = "00:00";
+      });
+
+      // Admin dashboard actions
+      const adminRefreshBtn = qs("#adminRefreshBtn");
+      if(adminRefreshBtn){ adminRefreshBtn.addEventListener("click", loadAdmin); }
+      const adminOpenBotBtn = qs("#adminOpenBotBtn");
+      if(adminOpenBotBtn){ adminOpenBotBtn.addEventListener("click", ()=>send("open_chat", {target:"main"})); }
+      const adminRemoveBtn = qs("#adminRemoveBtn");
+      if(adminRemoveBtn){
+        adminRemoveBtn.addEventListener("click", async ()=>{
+          const user_id = parseInt((qs("#adminRemoveUserId").value||"").trim(), 10);
+          const count = parseInt((qs("#adminRemoveCount").value||"").trim(), 10);
+          if(!(user_id>0) || !(count>0)){ toast("أدخل User ID و العدد"); return; }
+          const res = await apiFetch("/api/admin/remove_tickets", {method:"POST", body: JSON.stringify({user_id, count})});
+          if(res && res.ok){ qs("#adminMsg").textContent = `تم حذف ${res.removed} تذكرة ✅`; toast("تم التنفيذ ✅"); loadAdmin(); }
+          else { qs("#adminMsg").textContent = `خطأ: ${res.error || "unknown"}`; toast("فشل التنفيذ"); }
+        });
+      }
+    }
+
+    async function loadFromApi(){
+      const res = await apiFetch("/api/me");
+      if(!res || !res.ok){
+        // API is optional; keep UI functional in fallback mode.
+        qs("#ratingSummary").textContent = "—";
+        qs("#ratingCount").textContent = "";
+        return;
+      }
+      ME = res;
+      // Ratings in header
+      if(res.rating){
+        const avg = res.rating.avg;
+        const cnt = res.rating.count || 0;
+        qs("#ratingSummary").textContent = (avg && cnt) ? avg.toFixed(2) : "—";
+        qs("#ratingCount").textContent = cnt ? (`(${cnt})`) : "";
+      }
+      // Services (with enabled flags)
+      if(res.services && Array.isArray(res.services) && res.services.length){
+        SERVICES = res.services;
+        renderServices();
+        renderAdminServices();
+      }
+      // Profile
+      if(res.profile){
+        if(res.profile.full_name) qs("#fullName").value = res.profile.full_name;
+        if(res.profile.age) qs("#age").value = res.profile.age;
+        if(res.profile.tiktok_account) qs("#tiktok").value = res.profile.tiktok_account;
+        qs("#profileStatus").textContent = res.profile.complete ? "✅ مكتمل" : "⚠️ ناقص";
+      }
+      // Saved videos
+      DB_SAVED = res.saved_videos || [];
+      renderDbSaved();
+      // Admin
+      if(res.user && res.user.is_admin){
+        const btn = qs("#adminTabBtn");
+        if(btn) btn.style.display = "inline-flex";
+      }
+    }
+
+    function renderAdminServices(){
+      const wrap = qs("#adminServicesList");
+      if(!wrap) return;
+      wrap.innerHTML = "";
+      SERVICES.forEach(s=>{
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<div class="meta"><div class="h">${(s.emoji ? s.emoji+" " : "") + (s.name||s.id)}</div><div class="p">ID: ${s.id}</div></div>`;
+        const right = document.createElement("div");
+        right.className = "row";
+        const toggle = document.createElement("input");
+        toggle.type = "checkbox";
+        toggle.className = "toggle";
+        toggle.checked = (s.enabled !== false);
+        toggle.addEventListener("change", async ()=>{
+          const enabled = !!toggle.checked;
+          const r = await apiFetch("/api/admin/services/set", {method:"POST", body: JSON.stringify({id:s.id, enabled})});
+          if(r && r.ok){
+            toast("تم التحديث ✅");
+            // reflect in local list
+            s.enabled = enabled;
+            renderServices();
+          } else {
+            toast("فشل تحديث الخدمة");
+            toggle.checked = !enabled;
+          }
+        });
+        right.appendChild(toggle);
+        div.appendChild(right);
+        wrap.appendChild(div);
+      });
+    }
+
+    function renderAdminPending(pending){
+      const wrap = qs("#adminPendingList");
+      if(!wrap) return;
+      wrap.innerHTML = "";
+      if(!pending || pending.length===0){
+        wrap.innerHTML = `<div class="item"><div class="meta"><div class="h">لا توجد تذاكر انتظار</div><div class="p">كل شيء محدث ✅</div></div><span class="chip">—</span></div>`;
+        return;
+      }
+      pending.forEach(o=>{
+        const div = document.createElement("div");
+        div.className = "item";
+        const u = o.user || {};
+        const title = `#${o.order_id} — ${o.action}`;
+        const desc = `👤 ${u.full_name || u.username || u.user_id} • 🆔 ${u.user_id} • 🔗 ${o.video_url}`;
+        div.innerHTML = `<div class="meta"><div class="h">${title}</div><div class="p" style="direction:ltr;text-align:left;max-width:70ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${desc}</div></div>`;
+        const right = document.createElement("div");
+        right.className = "row";
+        const acc = document.createElement("button");
+        acc.className = "btn btnPrimary"; acc.textContent = "قبول";
+        const rej = document.createElement("button");
+        rej.className = "btn btnDanger"; rej.textContent = "رفض";
+        acc.addEventListener("click", ()=>adminDecide(o.order_id, "accept"));
+        rej.addEventListener("click", ()=>adminDecide(o.order_id, "reject"));
+        right.appendChild(acc); right.appendChild(rej);
+        div.appendChild(right);
+        wrap.appendChild(div);
+      });
+    }
+
+    async function adminDecide(order_id, decision){
+      const path = (decision === "accept") ? "/api/admin/accept" : "/api/admin/reject";
+      const res = await apiFetch(path, {method:"POST", body: JSON.stringify({order_id})});
+      if(res && res.ok){
+        toast(decision === "accept" ? "تم القبول ✅" : "تم الرفض ✅");
+        loadAdmin();
+      } else {
+        toast("فشل العملية");
+      }
+    }
+
+    async function loadAdmin(){
+      const msg = qs("#adminMsg");
+      if(msg) msg.textContent = "";
+      const analytics = await apiFetch("/api/admin/analytics");
+      if(analytics && analytics.ok){
+        qs("#adminTotalTickets").textContent = String(analytics.total_tickets ?? "—");
+        qs("#adminUsers").textContent = String(analytics.total_users ?? "—");
+      }
+      const pending = await apiFetch("/api/admin/pending");
+      if(pending && pending.ok){
+        qs("#adminPendingCount").textContent = String(pending.pending.length);
+        renderAdminPending(pending.pending);
+      } else {
+        renderAdminPending([]);
+      }
+      renderAdminServices();
+    }
+    // Initialization
+    initTelegram();
+    renderServices();
+    setupTabs();
+    renderLocalSaved();
+    bindActions();
+    // Keep header compact on scroll (prevents the "flying dashboard" feeling)
+    const headerEl = qs(".header");
+    window.addEventListener("scroll", ()=>{
+      if(!headerEl) return;
+      headerEl.classList.toggle("compact", window.scrollY > 24);
+    }, {passive:true});
+
+    qs("#profileStatus").textContent = "⚠️ أكمل الملف داخل البوت أو من هنا";
+    loadFromApi();
+  </script>
+</body>
+</html>
+
+<!--
+  ------------------------------------------------------------------------------
+  Design System Catalog (for maintainability + future extensions)
+  This section intentionally contains many small, well-structured blocks so the
+  file stays self-documented and easy to extend without external dependencies.
+  ------------------------------------------------------------------------------
+-->
+<!-- Component: Table -->
+<template>
+  <div class="card" aria-label="Table example">
+    <div class="cardHeader">
+      <h2>Table Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Table keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Stepper -->
+<template>
+  <div class="card" aria-label="Stepper example">
+    <div class="cardHeader">
+      <h2>Stepper Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Stepper keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Skeleton -->
+<template>
+  <div class="card" aria-label="Skeleton example">
+    <div class="cardHeader">
+      <h2>Skeleton Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Skeleton keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Button -->
+<template>
+  <div class="card" aria-label="Button example">
+    <div class="cardHeader">
+      <h2>Button Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Button keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Button -->
+<template>
+  <div class="card" aria-label="Button example">
+    <div class="cardHeader">
+      <h2>Button Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Button keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Select -->
+<template>
+  <div class="card" aria-label="Select example">
+    <div class="cardHeader">
+      <h2>Select Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Select keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Chip -->
+<template>
+  <div class="card" aria-label="Chip example">
+    <div class="cardHeader">
+      <h2>Chip Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Chip keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Card -->
+<template>
+  <div class="card" aria-label="Card example">
+    <div class="cardHeader">
+      <h2>Card Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Card keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Tabs -->
+<template>
+  <div class="card" aria-label="Tabs example">
+    <div class="cardHeader">
+      <h2>Tabs Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Tabs keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Stepper -->
+<template>
+  <div class="card" aria-label="Stepper example">
+    <div class="cardHeader">
+      <h2>Stepper Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Stepper keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Chip -->
+<template>
+  <div class="card" aria-label="Chip example">
+    <div class="cardHeader">
+      <h2>Chip Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Chip keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Stepper -->
+<template>
+  <div class="card" aria-label="Stepper example">
+    <div class="cardHeader">
+      <h2>Stepper Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Stepper keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Tabs -->
+<template>
+  <div class="card" aria-label="Tabs example">
+    <div class="cardHeader">
+      <h2>Tabs Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Tabs keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Card -->
+<template>
+  <div class="card" aria-label="Card example">
+    <div class="cardHeader">
+      <h2>Card Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Card keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
+
+<!-- Component: Tabs -->
+<template>
+  <div class="card" aria-label="Tabs example">
+    <div class="cardHeader">
+      <h2>Tabs Title</h2>
+      <p>وصف قصير لإظهار الشكل والقياسات والاتساق.</p>
+    </div>
+    <div class="cardBody">
+      <div class="row">
+        <span class="badge">مثال Badge</span>
+        <span class="chip">مثال Chip</span>
+      </div>
+      <div class="hr"></div>
+      <div class="row">
+        <div class="field">
+          <div class="label">حقل تجريبي</div>
+          <input class="input" placeholder="Placeholder...">
+          <div class="hint">نص مساعد يشرح ماذا يكتب المستخدم هنا.</div>
+        </div>
+      </div>
+      <div class="btnRow">
+        <button class="btn">زر</button>
+        <button class="btn btnPrimary">زر أساسي</button>
+        <button class="btn btnWarn">تحذير</button>
+        <button class="btn btnDanger">خطر</button>
+      </div>
+    </div>
+  </div>
+</template>
+<!-- Notes:
+  - Tabs keeps consistent spacing, border, radius, and accessible contrast.
+  - Use semantic elements where possible.
+  - Avoid heavy animations; keep it snappy on low-end phones.
+-->
